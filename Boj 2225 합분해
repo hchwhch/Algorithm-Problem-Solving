@@ -1,0 +1,45 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+int dx[4] = { -1, 1, 0, 0 };
+int dy[4] = { 0, 0, -1, 1 };
+
+typedef long long ll;
+
+int p[105];
+ll d[205][205];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, k;
+	cin >> n >> k;
+
+	for (int i = 1; i <= k; i++) d[i][0] = 1;
+	for (int i = 1; i <= n; i++) d[1][i] = 1;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= k; j++)
+		{
+			for (int x = 0; x <= n; x++)
+			{
+				int cx = i - x;
+				if (cx < 0) continue;
+
+				d[j][i] += (d[j - 1][cx]) % 1000000000;
+			}
+		}
+	}
+
+	cout << d[k][n] % 1000000000;
+}
