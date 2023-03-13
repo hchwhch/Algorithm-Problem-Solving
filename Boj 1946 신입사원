@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+int dx[4] = { -1, 1, 0, 0 };
+int dy[4] = { 0, 0, -1, 1 };
+
+typedef long long ll;
+
+pair<int,int> d[100005];
+
+int n;
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+
+	while (t--)
+	{
+		cin >> n;
+
+		int ans = 0;
+
+		for (int i = 0; i < n; i++)
+		{
+			cin >> d[i].first >> d[i].second;
+		}
+		sort(d, d + n);
+
+		int mi = 0x7f7f7f7f;
+		for (int i = 0; i < n; i++)
+		{
+			if (d[i].second < mi)
+			{
+				ans++;
+				mi = d[i].second;
+			}
+		}
+		cout << ans << '\n';
+	}
+}
