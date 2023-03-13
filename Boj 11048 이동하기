@@ -1,0 +1,38 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+int dx[4] = { -1, 1, 0, 0 };
+int dy[4] = { 0, 0, -1, 1 };
+
+typedef long long ll;
+
+int p[1005][1005];
+int d[1005][1005];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++) cin >> p[i][j];
+	}
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++) d[i][j] = max({ d[i - 1][j - 1], d[i][j - 1], d[i - 1][j] }) + p[i][j];
+	}
+
+	cout << d[n][m];
+}
