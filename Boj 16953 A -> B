@@ -1,0 +1,44 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+int dx[4] = { -1, 1, 0, 0 };
+int dy[4] = { 0, 0, -1, 1 };
+
+typedef long long ll;
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	ll a, b;
+	cin >> a >> b;
+
+	queue<pair<ll, ll>> Q;
+	Q.push({ a, 1 });
+	
+	ll ans = 0x7f7f7f7f;
+	while (!Q.empty())
+	{
+		ll cv, cc;
+		tie(cv, cc) = Q.front(); Q.pop();
+		if (cv == b) ans = min(ans, cc);
+
+		if (cv * 2 <= b)
+		{
+			Q.push({ cv * 2, cc + 1 });
+		}
+		if (cv * 10 + 1 <= b)
+		{
+			Q.push({ cv * 10 + 1, cc + 1 });
+		}
+	}
+	cout << (ans != 0x7f7f7f7f ? ans : -1);
+}
