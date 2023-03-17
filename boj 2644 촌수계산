@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+
+using namespace std;
+
+bool board[105][105];
+
+int dis[105];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n;
+	cin >> n;
+
+	int a, b;
+	cin >> a >> b;
+
+	int m;
+	cin >> m;
+
+	for (int i = 0; i < m; i++)
+	{
+		int x, y;
+		cin >> x >> y;
+
+		board[x][y] = 1;
+		board[y][x] = 1;
+	}
+	fill(dis, dis + n + 1, -1);
+
+	queue<int> Q;
+	Q.push(a);
+	dis[a] = 0;
+
+	while (!Q.empty())
+	{
+		int cx = Q.front(); Q.pop();
+		for (int i = 1; i <= n; i++)
+		{
+			if (board[i][cx])
+			{
+				if (dis[i] >= 0) continue;
+				Q.push(i);
+				dis[i] = dis[cx] + 1;
+			}
+		}
+		for (int i = 1; i <= n; i++)
+		{
+			if (board[cx][i])
+			{
+				if (dis[i] >= 0) continue;
+				Q.push(i);
+				dis[i] = dis[cx] + 1;
+			}
+		}
+	}
+	cout << dis[b];
+}
