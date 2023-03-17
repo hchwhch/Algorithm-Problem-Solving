@@ -1,0 +1,44 @@
+#include<iostream>
+#include<deque>
+#include<algorithm>
+
+using namespace std;
+
+typedef long long ll;
+
+int d[100];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	
+	int n, m;
+	cin >> n >> m;
+
+	deque<int> D;
+
+	for (int i = 1; i <= n; i++)
+	{
+		D.push_back(i);
+	}
+
+	for (int i = 0; i < m; i++) cin >> d[i];
+
+	int ans = 0;
+	for (int i = 0; i < m; i++)
+	{
+		int cnt = 0;
+		while (1)
+		{
+			if (D.front() == d[i]) break;
+			int cx = D.back();
+			D.pop_back();
+			D.push_front(cx);
+			cnt++;
+		}
+		ans += min(cnt, (int)D.size() - cnt);
+		D.pop_front();
+	}
+	cout << ans;
+}
