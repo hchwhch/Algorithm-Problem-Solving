@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<tuple>
+#include<unordered_set>
+
+using namespace std;
+
+const int INF = 0x7f7f7f7f;
+
+typedef long long ll;
+
+int p[1005];
+int d[1005];
+
+int goal;
+vector<int> adj[1005];
+
+int solve(int cur)
+{
+	if (adj[cur].empty())
+	{
+		d[cur] = p[cur];
+		return d[cur];
+	}
+
+	if (d[cur] != -1) return d[cur];
+
+	for (auto nxt : adj[cur])
+	{
+		d[cur] = max(d[cur], solve(nxt) + p[cur]);
+	}
+
+	return d[cur];
+}
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+
+	while (t--)
+	{
+
+		int n, k;
+		cin >> n >> k;
+
+		for (int i = 1; i <= n; i++) adj[i].clear();
+		fill(d + 1, d + n + 1, -1);
+
+		for (int i = 1; i <= n; i++) cin >> p[i];
+
+		for (int i = 0; i < k; i++)
+		{
+			int a, b;
+			cin >> a >> b;
+
+			adj[b].push_back(a);
+		}
+
+		cin >> goal;
+
+		cout << solve(goal) << '\n';
+	}
+}
