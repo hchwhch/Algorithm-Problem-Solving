@@ -1,0 +1,96 @@
+#include<iostream>
+#include<string>
+#include<stack>
+#include<tuple>
+#include<queue>
+#include<algorithm>
+#include<set>
+
+using namespace std;
+
+const int INF = 1000000;
+
+typedef long long ll;
+
+int dx[4] = { 0, -1, 0, 1 };
+int dy[4] = { 1, 0, -1, 0 };
+
+bool isLight[105][105];
+bool isUsed[105][105];
+bool vis[105][105];
+
+//각 방에서 불을 켤 수 있는 다른 방을 저장
+vector<pair<int, int>> adj[105][105];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+
+	for (int i = 0; i < m; i++)
+	{
+		int x, y, a, b;
+		cin >> x >> y >> a >> b;
+		adj[x][y].push_back({ a, b });
+	}
+
+	queue<pair<int, int>> Q;
+
+	isLight[1][1] = true;
+
+//한 방에서 불을 켰을 때 다른 방으로 갈 수 있는 새로운 길이 열릴 수 있기 때문에
+//이번 탐색에서 한 번도 사용하지 않은 스위치를 사용했다면 다시 탐색을 시작하고
+//처음 사용할 수 있는 스위치가 없다면 종료한다.
+	while (1)
+	{
+		for (int i = 1; i <= n; i++) fill(vis[i], vis[i] + n + 1, 0);
+
+		Q.push({ 1, 1 });
+		vis[1][1] = true;
+
+		int isEndTime = true;
+
+		while (!Q.empty())
+		{
+			int cx, cy;
+			tie(cx, cy) = Q.front(); Q.pop();
+			
+			if (isUsed[cx][cy] == false) isEndTime = false;
+			isUsed[cx][cy] = true;
+
+			for (auto L : adj[cx][cy])
+			{
+				isLight[L.first][L.second] = true;
+			}
+
+			for (int dir = 0; dir < 4; dir++)
+			{
+				int nx = cx + dx[dir];
+				int ny = cy + dy[dir];
+
+				if (nx < 1 || nx >= n + 1 || ny < 1 || ny >= m + 1) continue;
+				if (!isLight[nx][ny]) continue;
+				if (vis[nx][ny]) continue;
+
+				Q.push({ nx, ny });
+				vis[nx][ny] = 1;
+			}
+		}
+
+		if (isEndTime) break;
+	}
+	int ans = 0;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (isLight[i][j]) ans++;
+		}
+	}
+
+	cout << ans;
+}
