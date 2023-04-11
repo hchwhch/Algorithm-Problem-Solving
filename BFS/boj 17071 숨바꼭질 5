@@ -1,0 +1,65 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<tuple>
+#include<unordered_set>
+
+using namespace std;
+
+const int INF = 0x7f7f7f7f;
+const int LMT = 500000;
+
+//홀수 시간에 방문한 곳은 나중의 홀수 시간에 방문할 수 있다.
+//또한 짝수 시간에 방문한 곳은 나중의 짝수 시간에 방문할 수 있다.
+//ex) 2초 만에 5를 갈 수 있으면 3초에 4(5-1)로 갔다가 4초에 5(4+1)로 다시 갈 수 있으므로...
+
+//홀수, 짝수 시간 배열을 따로 만들어야 한다.
+//왜냐하면 일차원 배열이라면 이미 홀수 시간에 방문이 되면
+//짝수 시간에 방문은 스킵되서 확인되지 않을 수 있기 때문이다.
+int dis[2][500005];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, k;
+	cin >> n >> k;
+
+	for(int i = 0; i < 2; i++) fill(dis[i], dis[i] + 500005, -1);
+  
+	queue<pair<int,int>> Q;
+	Q.push({n, 0});
+	dis[0][n] = 0;
+
+	while (!Q.empty())
+	{
+		int cp, ct, nxt;
+		tie(cp, ct) = Q.front(); Q.pop();
+		nxt = ct + 1;
+
+		for (int nv : {2 * cp, cp - 1, cp + 1})
+		{
+			if (nv < 0 || nv > 500000) continue;
+			if (dis[nxt % 2][nv] != -1) continue;
+
+			Q.push({nv, nxt});
+			dis[nxt % 2][nv] = nxt;
+		}
+	}
+
+	bool found = false;
+	int ans = 0;
+	while (k <= LMT) {
+		if (dis[ans % 2][k] <= ans) {
+			found = true;
+			break;
+		}
+		k += ++ans;
+	}
+	if (found) cout << ans;
+	else
+		cout << -1;
+}
