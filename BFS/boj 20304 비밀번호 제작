@@ -1,0 +1,96 @@
+#include<iostream>
+#include<string>
+#include<stack>
+#include<tuple>
+#include<queue>
+#include<algorithm>
+#include<bitset>
+
+using namespace std;
+
+const int INF = 0x7f7f7f7f;
+
+typedef long long ll;
+
+int dx[4] = { 1, -1, 0, 0 };
+int dy[4] = { 0, 0, 1, -1 };
+
+int n, m;
+
+int dis[100'000'5];
+
+//숫자의 비트를 하나 바꾸면 안전 거리는 1, 2개 바꾸면 2이다
+//이 점을 이용해 비트마스킹으로 BFS탐색한다
+//ex) 3 => 0011 을 하나의 비트만 바꾼다
+//=> 1011, 0111, 0001, 0010 이 안전거리 1에 해당한다(1011은 10을 넘으므로 제외)
+//해커가 입력한 비밀번호를 BFS 시작점으로 넣고 탐색한다
+//큐이기 때문에 그 숫자에 대한 안전거리가 작은 것이 큰 것보다 무조건 먼저 오게 된다
+//따라서 이미 dis배열이 차 있다면 그것은 이미 가장 작은 안전거리, 즉 그 비번에 대한 안전도가 된다.
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n, m;
+
+    cin >> n >> m;
+
+    vector<int> start;
+
+    for (int i = 0; i < m; i++)
+    {
+        int num;
+        cin >> num;
+        start.push_back(num);
+    }
+
+    fill(dis, dis + n + 2, -1);
+
+    queue<int> Q;
+    for (auto e : start)
+    {
+        dis[e] = 0;
+        Q.push(e);
+    }
+
+    while (!Q.empty())
+    {
+        int cur = Q.front(); Q.pop();
+
+        int next;
+
+//비트마스킹을 이용해 bfs로 탐색한다
+//각 자리를 바꾸기 위해 1씩 왼쪽으로 비트시프트하면서 반복한다
+        for (int k{}; k < 31; k++)
+        {
+        //그 자리가 1인지 확인한다
+        //ex) k = 0; 
+        //  (1 << k) => 0001
+        //  cur => 0011
+        //  :맨 오른쪽 자리는 1인것을 확인할 수 있다
+            if (cur & (1 << k))
+            {
+            //그 자리를 1에서 0으로 바꾸는 연산
+                next = cur & ~(1 << k);
+            }
+            else
+            {
+            //그 자리를 0에서 1로 바꾸는 연산
+                next = cur | (1 << k);
+            }
+
+            if (next > n) continue;
+            if (dis[next] >= 0) continue;
+
+            dis[next] = dis[cur] + 1;
+            Q.push(next);
+        }
+    }
+
+    int ans = 0;
+    for (int i{}; i <= n; i++)
+    {
+        ans = max(ans, dis[i]);
+    }
+    cout << ans;
+}
